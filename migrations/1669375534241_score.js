@@ -43,6 +43,16 @@ exports.up = (pgm) => {
             notNull: true,
             default: false
         },
+        galxe_passport_bsc: {
+            type: 'bool',
+            notNull: true,
+            default: false
+        },
+        galxe_partners_polygon: {
+            type: 'bool',
+            notNull: true,
+            default: false
+        },
         curve_eth: {
             type: 'bool',
             notNull: true,

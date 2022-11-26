@@ -35,6 +35,15 @@ async function checkUserHistory(address) {
     if (!userData.ens_resolved_eth) {
         userData.ens_resolved_eth = await checkENSResloved(userData.user)
     }
+
+    if (!userData.galxe_passport_bsc) {
+        userData.galxe_passport_bsc = await checkGalxePassportStatus(userData.user)
+    }
+
+    if (!userData.galxe_partners_polygon) {
+        userData.galxe_partners_polygon = await checkGalxePartnersStatus(userData.user)
+    }
+
     if (!userData.uniswap_swap_eth || !userData.uniswap_liquidity_eth || !userData.used_3_dex_eth) {
         const data = await checkSwapStatus(userData.user)
         userData.uniswap_swap_eth = data.uni_swap
@@ -53,6 +62,8 @@ async function checkUserHistory(address) {
             "uniswap_swap_eth" = ${userData.uniswap_swap_eth},
             "uniswap_liquidity_eth" = ${userData.uniswap_liquidity_eth},
             "used_3_dex_eth" = ${userData.used_3_dex_eth},
+            "galxe_passport_bsc" = ${userData.galxe_passport_bsc},
+            "galxe_partners_polygon" = ${userData.galxe_partners_polygon},
             "updatedAt" = now()
             WHERE "user" = '${userData.user}'
             `
@@ -163,6 +174,43 @@ async function checkSwapStatus(address) {
     }
 }
 
+async function checkGalxePassportStatus(address) {
+    await Moralis.start({
+        apiKey: '1KUrTgmIhCFBGcPnho6ebLCWbhq6ApWKfLh2ipaWbclwoYpgj8p19zdY98Lm9XuL',
+    })
+
+    const chain = EvmChain.BSC;
+
+    const response = await Moralis.EvmApi.nft.getWalletNFTs({
+        address,
+        chain,
+        tokenAddresses: ["0xE84050261CB0A35982Ea0f6F3D9DFF4b8ED3C012"]
+    });
+    if (response.data.total >= 1) {
+        return true
+    }
+
+    return false
+}
+
+async function checkGalxePartnersStatus(address) {
+    await Moralis.start({
+        apiKey: '1KUrTgmIhCFBGcPnho6ebLCWbhq6ApWKfLh2ipaWbclwoYpgj8p19zdY98Lm9XuL',
+    })
+
+    const chain = EvmChain.POLYGON;
+
+    const response = await Moralis.EvmApi.nft.getWalletNFTs({
+        address,
+        chain,
+        tokenAddresses: ["0x1871464F087dB27823Cff66Aa88599AA4815aE95"]
+    });
+    if (response.data.total >= 10) {
+        return true
+    }
+
+    return false
+}
 
 function compare(data, platform) {
 
