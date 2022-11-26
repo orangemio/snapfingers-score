@@ -69,7 +69,7 @@ exports.up = (pgm) => {
             default: pgm.func('current_timestamp'),
         },
     })
-    pgm.sql(`ALTER DATABASE snapshots SET timezone TO 'Asia/Shanghai';`)
+    // pgm.sql(`ALTER DATABASE snapshots SET timezone TO 'Asia/Shanghai';`)
     // pgm.createIndex('posts', 'userId')
 }
 
